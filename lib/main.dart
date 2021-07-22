@@ -47,7 +47,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   void changeColor() {
     setState(() {
-      pathes.add(ColorPath(color: Colors.red, path: Path()));
+      pathes.add(ColorPath(color: Colors.green, path: Path()));
     });
   }
 
