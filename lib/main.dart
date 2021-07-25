@@ -45,9 +45,33 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     });
   }
 
-  void changeColor() {
+  void changeColorGreen() {
     setState(() {
       pathes.add(ColorPath(color: Colors.green, path: Path()));
+    });
+  }
+
+  void changeColorRed() {
+    setState(() {
+      pathes.add(ColorPath(color: Colors.red, path: Path()));
+    });
+  }
+
+  void changeColorBlue() {
+    setState(() {
+      pathes.add(ColorPath(color: Colors.blue, path: Path()));
+    });
+  }
+
+  void changeColorYellow() {
+    setState(() {
+      pathes.add(ColorPath(color: Colors.yellow, path: Path()));
+    });
+  }
+
+  void changeColorOrange() {
+    setState(() {
+      pathes.add(ColorPath(color: Colors.orange, path: Path()));
     });
   }
 
@@ -62,7 +86,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             child: MouseRegion(
               onHover: _updateLocation,
               child: Container(
-                color: Colors.lightBlueAccent,
+                color: Colors.white,
                 child: CustomPaint(
                   painter: MyPainter(
                     path: pathes,
@@ -82,8 +106,78 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 backgroundColor: Colors.green,
                 textStyle: const TextStyle(fontSize: 20),
               ),
-              onPressed: changeColor,
+              onPressed: changeColorGreen,
               child: const Text(''),
+            ),
+          ),
+          Positioned(
+            top: 80,
+            left: 1100,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16.0),
+                primary: Colors.white,
+                backgroundColor: Colors.red,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: changeColorRed,
+              child: const Text(''),
+            ),
+          ),
+          Positioned(
+            top: 130,
+            left: 1100,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16.0),
+                primary: Colors.white,
+                backgroundColor: Colors.blue,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: changeColorBlue,
+              child: const Text(''),
+            ),
+          ),
+          Positioned(
+            top: 180,
+            left: 1100,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16.0),
+                primary: Colors.white,
+                backgroundColor: Colors.yellow,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: changeColorYellow,
+              child: const Text(''),
+            ),
+          ),
+          Positioned(
+            top: 230,
+            left: 1100,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16.0),
+                primary: Colors.white,
+                backgroundColor: Colors.orange,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: changeColorOrange,
+              child: const Text(''),
+            ),
+          ),
+          Positioned(
+            top: 550,
+            left: 1000,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16.0),
+                primary: Colors.white,
+                backgroundColor: Colors.black,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: width,
+              child: const Text('ширина линии 20'),
             ),
           ),
         ],
@@ -98,10 +192,21 @@ class ColorPath {
   ColorPath({required this.color, required this.path});
 }
 
+class Width {
+  Width width;
+  Width({required this.width});
+}
+
 class MyPainter extends CustomPainter {
   final int iteration;
   List<ColorPath> path;
   MyPainter({required this.iteration, required this.path});
+
+  List a = [10];
+
+  void width() {
+    a.add(20);
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -109,7 +214,7 @@ class MyPainter extends CustomPainter {
       Paint paint = Paint()
         ..color = path[i].color
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 10.0;
+        ..strokeWidth = a[i];
       canvas.drawPath(path[i].path, paint);
     }
   }
