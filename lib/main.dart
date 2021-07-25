@@ -176,7 +176,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 backgroundColor: Colors.black,
                 textStyle: const TextStyle(fontSize: 20),
               ),
-              onPressed: width,
+              onPressed: Width,
               child: const Text('ширина линии 20'),
             ),
           ),
