@@ -40,20 +40,31 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _downCounter = 0;
   var color = Colors.black;
   double width = 10;
+  void updateXY(PointerEvent details) {
+    details = details.transformed(details.transform);
+    x = details.position.dx;
+    y = details.position.dy - 55;
+  }
 
   void _updateLocation(PointerEvent details) {
+    updateXY(details);
     setState(() {
-      details = details.transformed(details.transform);
-      x = details.position.dx;
-      y = details.position.dy - 55;
       pathes[pathes.length - 1].path.lineTo(x, y);
     });
   }
 
   void _incrementDown(PointerEvent details) {
-    _updateLocation(details);
+    updateXY(details);
     setState(() {
       _downCounter++;
+      addToPath();
+    });
+  }
+
+  void _decrementDown(PointerEvent details) {
+    updateXY(details);
+    setState(() {
+      _downCounter--;
     });
   }
 
@@ -100,9 +111,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 
   void addToPath() {
-    if (_downCounter == 1) {
-      pathes.add(ColorPathWidth(color: color, path: Path(), width: width));
-    }
+    pathes.add(ColorPathWidth(color: color, path: Path(), width: width));
+    pathes[pathes.length - 1].path.moveTo(x, y);
   }
 
   var pathes = <ColorPathWidth>[
@@ -117,6 +127,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           Positioned.fill(
             child: Listener(
               onPointerDown: _incrementDown,
+              onPointerUp: _decrementDown,
               onPointerMove: _updateLocation,
               child: Container(
                 color: Colors.white,
