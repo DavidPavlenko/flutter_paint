@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -35,6 +36,9 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   double x = 0.0;
   double y = 0.0;
+  int _downCounter = 0;
+  var color = Colors.black;
+  double width = 10;
 
   void _updateLocation(PointerEvent details) {
     setState(() {
@@ -45,37 +49,64 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     });
   }
 
+  void _incrementDown(PointerEvent details) {
+    _updateLocation(details);
+    setState(() {
+      _downCounter++;
+    });
+  }
+
   void changeColorGreen() {
     setState(() {
-      pathes.add(ColorPath(color: Colors.green, path: Path()));
+      color = Colors.green;
+      addToPath();
     });
   }
 
   void changeColorRed() {
     setState(() {
-      pathes.add(ColorPath(color: Colors.red, path: Path()));
+      color = Colors.red;
+      addToPath();
     });
   }
 
   void changeColorBlue() {
     setState(() {
-      pathes.add(ColorPath(color: Colors.blue, path: Path()));
+      color = Colors.blue;
+      addToPath();
     });
   }
 
   void changeColorYellow() {
     setState(() {
-      pathes.add(ColorPath(color: Colors.yellow, path: Path()));
+      color = Colors.yellow;
+      addToPath();
     });
   }
 
   void changeColorOrange() {
     setState(() {
-      pathes.add(ColorPath(color: Colors.orange, path: Path()));
+      color = Colors.orange;
+      addToPath();
     });
   }
 
-  var pathes = <ColorPath>[ColorPath(color: Colors.black, path: Path())];
+  void changeWidthToA(double a) {
+    setState(() {
+      width = a;
+      addToPath();
+    });
+  }
+
+  void addToPath() {
+    if (_downCounter == 1) {
+      pathes.add(ColorPathWidth(color: color, path: Path(), width: width));
+    }
+  }
+
+  var pathes = <ColorPathWidth>[
+    ColorPathWidth(color: Colors.black, path: Path(), width: 10)
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +114,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       child: Stack(
         children: <Widget>[
           Positioned.fill(
-            child: MouseRegion(
-              onHover: _updateLocation,
+            child: Listener(
+              onPointerDown: _incrementDown,
+              onPointerMove: _updateLocation,
               child: Container(
                 color: Colors.white,
                 child: CustomPaint(
@@ -167,17 +199,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
           ),
           Positioned(
-            top: 550,
-            left: 1000,
-            child: TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(16.0),
-                primary: Colors.white,
-                backgroundColor: Colors.black,
-                textStyle: const TextStyle(fontSize: 20),
-              ),
-              onPressed: Width,
-              child: const Text('ширина линии 20'),
+            top: 300,
+            left: 900,
+            right: 0,
+            height: 50,
+            child: Slider.adaptive(
+              min: 10,
+              max: 50,
+              value: width,
+              onChanged: changeWidthToA,
             ),
           ),
         ],
@@ -186,27 +216,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 }
 
-class ColorPath {
+class ColorPathWidth {
   Path path;
   Color color;
-  ColorPath({required this.color, required this.path});
-}
-
-class Width {
-  Width width;
-  Width({required this.width});
+  double width;
+  ColorPathWidth(
+      {required this.color, required this.path, required this.width});
 }
 
 class MyPainter extends CustomPainter {
   final int iteration;
-  List<ColorPath> path;
+  List<ColorPathWidth> path;
   MyPainter({required this.iteration, required this.path});
-
-  List a = [10];
-
-  void width() {
-    a.add(20);
-  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -214,7 +235,7 @@ class MyPainter extends CustomPainter {
       Paint paint = Paint()
         ..color = path[i].color
         ..style = PaintingStyle.stroke
-        ..strokeWidth = a[i];
+        ..strokeWidth = path[i].width;
       canvas.drawPath(path[i].path, paint);
     }
   }
